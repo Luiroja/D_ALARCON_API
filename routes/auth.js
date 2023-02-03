@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js"); // HASHED PASSWORD UTIL
+var jwt = require('jsonwebtoken');
 
 
 //REGISTER
@@ -8,7 +9,7 @@ router.post("/register", async (req, res) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password,
+    password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString(),
   });
 
   try {
@@ -25,13 +26,13 @@ router.post('/login', async (req, res) => {
     try{
         const user = await User.findOne(
             {
-                userName: req.body.user_name
+                username: req.body.username
             }
         );
 
         !user && res.status(401).json("Nombre de usuario incorrecto");
 
-        //password hashed process
+        //password hashed decrypt process here
 
         const hashedPassword = CryptoJS.AES.decrypt(
             user.password,
@@ -39,12 +40,25 @@ router.post('/login', async (req, res) => {
         );
 
 
-        const password = hashedPassword.toString(CryptoJS.enc.Utf8);
+        const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
         
-        password != req.body.password && 
+        originalPassword != req.body.password && 
             res.status(401).json("Contraseña incorrecta");
+            
+            
+            const accessToken = jwt.sign(
+                {
+                    id: user._id,
+                    isAdmin: user.isAdmin,
+                },
+                process.env.JWT_SEC,
+                    {expiresIn:"3d"}
+                );
 
-            res.status(200).json(user)
+            //destructuring user
+            const { password, ...other} = user._doc // _doc this is a MONGODB structure
+
+            res.status(200).json({...other, accessToken})
 
     }catch(err){
         res.status(500).json(err);
