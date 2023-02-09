@@ -4,7 +4,8 @@ const connectDB = require('./config/db')
 const dotenv = require('dotenv').config();
 const port = process.env.PORT || 5000;
 
-const userRoute = require('./routes/userRoute')
+const userRoute = require('./routes/userRoute');
+const productRoute = require('./routes/productRoute');
 
 
 connectDB()
@@ -14,7 +15,8 @@ app.use (express.json());
 app.use (express.urlencoded({ extended: false }));
 
 
-app.use ("/api/users", userRoute)
+app.use ("/api/users", userRoute);
+app.use ("/api/products", productRoute);
 
 
 
