@@ -9,8 +9,7 @@ router.post('/', createProduct)
 router.post('/product/:id', updateProduct)
 router.delete('/product/:id', deleteProduct)
 
-
-//Acceso a usuarios normales
+//add Middleware "protect"
 router.get('/product/:id', getProduct)
 router.get('/', getProducts) 
 

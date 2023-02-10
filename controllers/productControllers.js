@@ -1,5 +1,4 @@
 const asyncHandler = require('express-async-handler');
-const product = require('../models/product');
 const Product =require('../models/product');
 
 const createProduct = asyncHandler(async(req, res) => {
@@ -50,12 +49,8 @@ const getProduct = asyncHandler(async (req, res) => {
             req.params.id,
             req.body,)
             res.status(200).json(getProduct)
-    }
-    
-    
-
-        
-            //analizar bien aquí como traer datos        
+    } 
+             
 })
 
 
@@ -80,13 +75,13 @@ const getProducts = asyncHandler(async (req, res) => {
     if(cNew) {
         products = await Product.find().sort({createAt: -1 }).limit(5);
     } else if (cCategory){
-        product = await Product.find({
+        products = await Product.find({
             categories: {
                 $in: [cCategory]
             }
         })
     } else {
-        product = await Product.find()
+        products = await Product.find()
     }
 
     res.status(200).json(products)
