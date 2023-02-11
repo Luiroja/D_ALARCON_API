@@ -5,17 +5,17 @@ const {registerUser, loginUser,
         deleteUser, getUsers, stats} 
         = require("../controllers/userControllers");
 
-const {protect} = require("../middlewares/authMiddleware")
+const {protect, protectAdmin, protectAuth} = require("../middlewares/authMiddleware")
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.post ('/user/:id', protect, updateUser);
+router.post ('/user/:id', protectAuth, updateUser);
 
 
-router.get('/find/:id', getUser );
-router.delete('/find/:id', deleteUser ); //Add the protectAdmin after getUser
-router.get('/', getUsers ); // Add the protectAdmin
-router.get('/stats', stats ); // Add the protectAdmin
+router.get('/find/:id', protectAdmin, getUser );
+router.delete('/find/:id', protectAdmin,deleteUser ); //Add the protectAdmin after getUser
+router.get('/', protectAdmin, getUsers ); // Add the protectAdmin
+router.get('/stats',protectAdmin, stats ); // Add the protectAdmin
 
 
 module.exports = router; 

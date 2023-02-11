@@ -32,13 +32,15 @@ const protect = asyncHandler (async(req,res, next) => {
 
 
 const protectAuth = asyncHandler(async (req, res, next) => {
+
+
     protect(req, res, () => {
-        if (req.user.id === req.params.id|| req.user.isAdmin) {
+        if (req.body._id === req.params._id) {
             try {
                 next()       
             } catch (err) {
                 res.status(402)
-                throw new Error ("No tienes permiso de Admin")
+                throw new Error ("No tienes permiso de para esto")
             }
         }
         
@@ -46,22 +48,19 @@ const protectAuth = asyncHandler(async (req, res, next) => {
 })
 //verify the type of authorization user or admin
 const protectAdmin = asyncHandler(async(req, res, next) => {
-    
+    const isAdminTrue = await User.find({isAdmin : true})
     protect(req, res, () => {
         
-        if(req.user.isAdmin) {
-            
-            try {
+        if(isAdminTrue) {
             next()
-                         
-            } catch (error) {
-                res.status(402)
-                throw new Error ("No tienes permiso de ADMIN")
-            }
-        }   
+            
+        }  else {
+            res.status(403)
+            throw new Error ("No tienes permiso de Admin")
+        }
+        })
     })
     
-})
 //verify the authorizatio of ADMIN USER
 
 
