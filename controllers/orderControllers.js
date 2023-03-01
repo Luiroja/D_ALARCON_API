@@ -64,12 +64,18 @@ const getOrders = asyncHandler(async(req, res) => {
 
 
 const getOrderIncome = asyncHandler(async(req, res) => {
+    
     const date = new Date();
     const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
     const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
+
+
     const income = await Order.aggregate([
-        {$match: {createdAt: {$gte: previousMonth }}},
+        {$match: {
+            createdAt: {$gte: previousMonth },
+           
+        }},
         {$project: {
             month: {$month: "$createdAt"},
             sales: "$amount", 
@@ -84,6 +90,8 @@ const getOrderIncome = asyncHandler(async(req, res) => {
     ]);
 
     res.status(200).json(income)
+
+    
 })
 
 

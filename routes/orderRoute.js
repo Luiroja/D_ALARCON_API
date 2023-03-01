@@ -1,5 +1,6 @@
 const express =require('express');
 const router = express.Router();
+const {protect, protectAdmin, protectAuth} = require("../middlewares/authMiddleware")
 
 const {createOrder, getOrder, 
     updateOrder, deleteOrder, 
@@ -10,7 +11,7 @@ const {createOrder, getOrder,
     router.post('/:id', updateOrder);// add middleware "protectAdmin"
     router.delete("/:id", deleteOrder);// add middleware "protectAndAuthorization"
     router.get('/', getOrders); //add middleware "protectAdmin"
-    router.get('/income', getOrderIncome);// add middleware "protectAdmin"
+    router.get('/income', getOrderIncome, protectAdmin );// add middleware "protectAdmin"
 
 
 module.exports = router; 
