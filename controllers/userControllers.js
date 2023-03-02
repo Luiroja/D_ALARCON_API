@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 const registerUser = asyncHandler(async(req, res) => {
     //desectruramos los datos del body (MODEL)
-    const {username,email,password} = req.body
+    const {username, fullname, profession, birthday, address,phone, email,password} = req.body
     // verificamos que los datos esten completos
     if(!username || !email || !password) {
         res.status (400)
@@ -26,6 +26,11 @@ const registerUser = asyncHandler(async(req, res) => {
     //Creamos el Usuario 
     const user = await User.create({
         username,
+        fullname,
+        profession,
+        birthday,
+        address,
+        phone,
         email,
         password: hashedPassword
     })
@@ -140,11 +145,17 @@ const getUsers = asyncHandler(async (req, res) => {
 
 //USERS STATS
 const stats = asyncHandler(async (req, res) => {
+    const userId= req.query.uid
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear() -1));
 
     const data =await User.aggregate([
-        {$match: {createdAt: {$gte: lastYear }}},
+        {$match: {createdAt: {$gte: lastYear },
+        ...(userId && {
+            users: {$elemMatch: {userId}},
+        })
+
+    }},
         {$project: {
             month: {
                 $month: "$createdAt"

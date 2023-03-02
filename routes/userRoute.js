@@ -14,7 +14,7 @@ router.post ('/user/:id', protectAuth, updateUser);
 
 router.get('/find/:id', protectAdmin, getUser );
 router.delete('/find/:id', protectAdmin,deleteUser ); //Add the protectAdmin after getUser
-router.get('/', protectAdmin, getUsers ); // Add the protectAdmin
+router.get('/', getUsers ); // Add the protectAdmin
 router.get('/stats',protectAdmin, stats ); // Add the protectAdmin
 
 
