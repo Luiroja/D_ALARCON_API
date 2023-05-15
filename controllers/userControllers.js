@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 const registerUser = asyncHandler(async(req, res) => {
     //desectruramos los datos del body (MODEL)
-    const {username, fullname, profession, birthday, address,phone, email,password} = req.body
+    const {username, img, fullname, profession, birthday, address,phone, email,password} = req.body
     // verificamos que los datos esten completos
     if(!username || !email || !password) {
         res.status (400)
@@ -27,6 +27,7 @@ const registerUser = asyncHandler(async(req, res) => {
     const user = await User.create({
         username,
         fullname,
+        img,
         profession,
         birthday,
         address,
@@ -63,6 +64,8 @@ const loginUser = asyncHandler(async(req, res) => {
         res.status (200).json ({
             id: user.id, 
             token: generateToken (user.id),
+            username: user.username,
+            img: user.img,
             isAdmin: user.isAdmin
         })
     } else {
@@ -84,6 +87,7 @@ const generateToken = (id, isAdmin) => {
     })
 }
 
+// logout
 
 //update 
 const updateUser = asyncHandler (async (req, res) => {

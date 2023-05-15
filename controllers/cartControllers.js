@@ -4,11 +4,12 @@ const Cart = require('../models/Cart');
 const createCart = asyncHandler(async(req, res) => {
 
     //desectruramos los datos del body (MODEL)
-    const {userId, products} = req.body;
+    const {userId, products, quantity} = req.body;
 
     const cart = await Cart.create({
         userId,
-        products
+        products,
+        quantity,
     })
 
     res.status(200).json(cart)

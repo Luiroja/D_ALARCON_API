@@ -4,13 +4,14 @@ const Product =require('../models/product');
 const createProduct = asyncHandler(async(req, res) => {
 
     //desectruramos los datos del body (MODEL)
-    const {title, desc, img, categories,size,ingredients,price,buyShop} = req.body;
+    const {title, desc, img, events, category,size,ingredients,price,buyShop} = req.body;
 
     const product = await Product.create({
         title,
         desc,
         img,
-        categories,
+        events,
+        category,
         size,
         ingredients,
         price,
@@ -70,7 +71,7 @@ const getProducts = asyncHandler(async (req, res) => {
     //Add querye for limit 5 products about the category selected
     const cNew = req.query.new
     const cCategory=req.query.category
-
+    
     let products;
     if(cNew) {
         products = await Product.find().sort({createAt: -1 }).limit(5);
